@@ -4,7 +4,10 @@ from src.expressions.Operation import Operation as Op
 
 from src.spjrud.Select import Select
 from src.spjrud.Project import Project
+from src.spjrud.Union import Union
 from src.spjrud.Connection import Connection
+
+import sqlite3
 
 # informatique.umons.ac.be/ssi/
 
@@ -16,7 +19,7 @@ TABLE = \
     'ADDRESS CHAR' + \
     'SALARY  REAL);'
 
-"""CREATE TABLE employees (
+"""CREATE TABLE contractors (
     first text,
     last text,
     pay integer
@@ -25,15 +28,20 @@ TABLE = \
 
 
 if __name__ == '__main__':
-    table = Relation('employees')
-    pay = Attribute('pay', 300000)
-    first = Attribute('first', 'Michael B')
-    last = Attribute('last', 'Jordan')
+    DB = 'test.db'
+    employees = Relation('employees')
+    departments = Relation('departments')
+    contractors = Relation('contractors')
 
-    #s = Select(table, Op(pay, Op.EQUAL, 50000))
-    #p = Project(table, [pay, last])
-    Connection().insert('test.db', table, [first, last, pay])
-    #print(p.get('test.db'))
+    pay = Attribute('pay', 10000)
+    first = Attribute('first', 'Karen')
+    last = Attribute('last', 'Pils')
+
+    s = Select(employees, Op(pay, Op.EQUAL, 50000))
+    p = Project(employees, [pay, last])
+    u = Union(employees, contractors)
+
+    print(u.get('test.db'))
 
 
 

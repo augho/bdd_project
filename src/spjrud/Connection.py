@@ -8,7 +8,7 @@ class Connection:
 
     def get(self, db_name):
         with sqlite3.connect(db_name) as conn:
-            print(self.query)
+            print(self.query + ';')
             res = conn.execute(self.query + ';')
 
         return res.fetchall()
