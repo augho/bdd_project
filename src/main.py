@@ -1,6 +1,12 @@
-import sqlite3 as sql3
+from src.expressions.Attribute import Attribute
+from src.expressions.Relation import Relation
+from src.expressions.Operation import Operation as Op
 
-#http://informatique.umons.ac.be/ssi/
+from src.spjrud.Select import Select
+from src.spjrud.Project import Project
+from src.spjrud.Connection import Connection
+
+# informatique.umons.ac.be/ssi/
 
 TABLE = \
     'CREATE TABLE COMPANY' + \
@@ -16,23 +22,22 @@ TABLE = \
     pay integer
 );
 """
-conn = sql3.connect('test.db')
-c = conn.cursor()
 
 
-def insert_emp(emp):
-    with conn:
-        c.execute(f"INSERT INTO employees VALUES ({emp.first}, {emp.last}, {emp.pay})")
+if __name__ == '__main__':
+    table = Relation('employees')
+    pay = Attribute('pay', 300000)
+    first = Attribute('first', 'Michael B')
+    last = Attribute('last', 'Jordan')
+
+    #s = Select(table, Op(pay, Op.EQUAL, 50000))
+    #p = Project(table, [pay, last])
+    Connection().insert('test.db', table, [first, last, pay])
+    #print(p.get('test.db'))
 
 
-def main():
-    pass
 
 
-c.execute("SELECT * FROM employees")
 
-print(c.fetchall())
 
-conn.commit()
 
-conn.close()

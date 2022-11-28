@@ -1,6 +1,6 @@
 class Relation:
     def __init__(self, name):
-        self.relation = name
+        self.name = name
 
     def __str__(self):
-        pass
+        return self.name
