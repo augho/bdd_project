@@ -6,6 +6,7 @@ from src.spjrud.Select import Select
 from src.spjrud.Project import Project
 from src.spjrud.Union import Union
 from src.spjrud.Connection import Connection
+from src.spjrud.Difference import Difference
 
 import sqlite3
 
@@ -40,8 +41,8 @@ if __name__ == '__main__':
     s = Select(employees, Op(pay, Op.EQUAL, 50000))
     p = Project(employees, [pay, last])
     u = Union(employees, contractors)
-
-    print(u.get('test.db'))
+    d = Difference(employees, contractors)
+    print(d.get('test.db'))
 
 
 
