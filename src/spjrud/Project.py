@@ -1,12 +1,12 @@
-from src.spjrud.Connection import Connection
+from src.expressions.Relation import Relation
 
 
-class Project(Connection):
+class Project(Relation):
     # SELECT DISTINCT a,b,... FROM table
     # table is a relation and a,b,... are attributes
     def __init__(self, relation, attributes):
         super().__init__()
-        self.relation = relation
+        self.subquery.append(relation)
         self.attributes = attributes
 
         self.query = 'SELECT DISTINCT'
@@ -15,6 +15,3 @@ class Project(Connection):
         # remove the last comma
         self.query = self.query[:len(self.query) - 1]
         self.query += f' FROM {relation.name}'
-
-    def __str__(self):
-        pass

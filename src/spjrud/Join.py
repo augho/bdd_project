@@ -1,8 +1,10 @@
-class Join:
+from src.expressions.Relation import Relation
 
-    def __init__(self, expr_a, expr_b):
-        self.expr_a = expr_a
-        self.expr_b = expr_b
 
-    def __str__(self):
-        pass
+class Join(Relation):
+
+    def __init__(self, rel_a, rel_b):
+        super().__init__()
+        self.subquery.append(rel_a)
+        self.subquery.append(rel_b)
+        self.query = f'SELECT * FROM {rel_a.name}, {rel_b.name}'
