@@ -1,39 +1,21 @@
 import sqlite3
-import uuid
 
 
 class Relation:
-    def __init__(self, name=None):
-        if name is not None:
-            self.name = name
-        else:
-            self.name = uuid.uuid4().hex
+    def __init__(self, name, db_name):
+        self.name = name
+        self.db_name = db_name
 
-        self.query = None
-        self.subquery = []
-
-    def set_subquery(self, subquery):
-        self.subquery = subquery
-
-    def get_query_result(self, db_name):
-        self._create_view(db_name)
-
-        with sqlite3.connect(db_name) as conn:
-            res = conn.execute(f'SELECT DISTINCT * FROM {self.name};')
+    def get_query_result(self, conn):
+        res = conn.execute(f'SELECT DISTINCT * FROM {self.get_query(conn)};')
 
         return res.fetchall()
 
-    def _create_view(self, db_name):
-        # if query is none then it's a relation already in the db
-        if self.query is None:
-            return
+    def get_query(self, conn):
+        return self.name
 
-        for subquery in self.subquery:
-            subquery._create_view(db_name)
-        with sqlite3.connect(db_name) as conn:
-            query = f'CREATE VIEW {self.name} AS ' + self.query
-            print(query + ';')
-            conn.execute(query + ';')
+    def _get_metadata(self):
+        pass
 
     @staticmethod
     def insert(db_name, table, attributes):

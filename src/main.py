@@ -8,7 +8,6 @@ from src.spjrud.Join import Join
 from src.spjrud.Rename import Rename
 from src.spjrud.Union import Union
 from src.spjrud.Difference import Difference
-from src.spjrud.Connection import Connection
 
 
 import sqlite3
@@ -35,6 +34,15 @@ def pretty_print(query_result, attributes=None):
     pass
 
 
+def get_result(db_name, algebra_query):
+    algebra_query.link_to(db_name)
+    with sqlite3.connect(db_name) as conn:
+        res = algebra_query.get_query_result(conn)
+
+    print(res)
+    return res
+
+
 if __name__ == '__main__':
     DB = 'test.db'
     employees = Relation('employees')
@@ -50,16 +58,18 @@ if __name__ == '__main__':
     s = Select(employees, Op(pay, Op.EQUAL, 50000))
     p = Project(employees, [pay, last])
     j = Join(employees, departments)
-    r = Rename(departments, employee_count, 'employee_nb')
+    r = Rename(departments, employee_nb, 'employee_count')
     u = Union(employees, contractors)
     d = Difference(employees, contractors)
 
+    # get_result(DB, s)
+
     with sqlite3.connect(DB) as conn:
-        curs = conn.cursor()
-        res = curs.execute(p.query + ';')
-        curs.executemany()
-        res.execute(s.query + ';')
-        print(res.fetchall())
+        cursor = conn.cursor()
+        query1 = "PRAGMA table_info(employees);"
+        query2 = "SELECT name FROM sqlite_master WHERE type='table';"
+        cursor.execute(query1)
+        print(cursor.fetchall())
 
 
 
