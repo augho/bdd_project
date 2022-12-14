@@ -1,4 +1,5 @@
 from src.expressions.Relation import Relation
+from src.expressions.Attribute import Attribute
 import sqlite3
 import uuid
 
@@ -7,7 +8,14 @@ class Rename(Relation):
     # ALTER TABLE table RENAME COLUMN curr_name TO new_name
     # table is a relation, curr_name is an attribute, new_name is a cst
     def __init__(self, relation, curr_name, new_name):
-        super().__init__(None, relation.db_name)
+        schema = []
+        for attribute in relation.schema:
+            if attribute.name == curr_name:
+                schema.append(Attribute(new_name, attribute.data_type))
+            else:
+                schema.append(Attribute(attribute.name, attribute.data_type))
+
+        super().__init__(None, relation.db_name, schema)
         self.relation = relation
         self.curr_name = curr_name
         self.new_name = new_name

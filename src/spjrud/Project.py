@@ -5,7 +5,7 @@ class Project(Relation):
     # SELECT DISTINCT a,b,... FROM table
     # table is a relation and a,b,... are attributes
     def __init__(self, relation, attributes):
-        super().__init__(None, relation.db_name)
+        super().__init__(None, relation.db_name, attributes)
         self.relation = relation
         self.attributes = attributes
 

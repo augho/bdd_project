@@ -2,20 +2,28 @@ import sqlite3
 
 
 class Relation:
-    def __init__(self, name, db_name):
+    def __init__(self, name, db_name, schema):
         self.name = name
         self.db_name = db_name
+        self.schema = schema
 
-    def get_query_result(self, conn):
-        res = conn.execute(f'SELECT DISTINCT * FROM {self.get_query(conn)};')
+    def get_query_result(self, cursor):
+        res = cursor.execute(f'SELECT DISTINCT * FROM {self.get_query(cursor)};')
 
         return res.fetchall()
+
+    def is_valid(self):
+        return len(self.schema) > 0
 
     def get_query(self, conn):
         return self.name
 
-    def _get_metadata(self):
-        pass
+    def has_attribute(self, attribute):
+        for attr in self.schema:
+            if attr == attribute:
+                return True
+
+        return False
 
     @staticmethod
     def insert(db_name, table, attributes):

@@ -35,7 +35,6 @@ def pretty_print(query_result, attributes=None):
 
 
 def get_result(db_name, algebra_query):
-    algebra_query.link_to(db_name)
     with sqlite3.connect(db_name) as conn:
         res = algebra_query.get_query_result(conn)
 
@@ -43,17 +42,72 @@ def get_result(db_name, algebra_query):
     return res
 
 
+def testing():
+    with sqlite3.connect(DB) as conn:
+        cursor = conn.cursor()
+        query1 = "PRAGMA table_info(employees);"
+        query2 = "SELECT name FROM sqlite_master WHERE type='table';"
+        cursor.execute(query1)
+        print(cursor.fetchall())
+
+
+def lazy_unit_test():
+    DB = 'test.db'
+
+    # employees
+    pay = Attribute('pay', Attribute.INTEGER)
+    first = Attribute('first', Attribute.TEXT)
+    last = Attribute('last', Attribute.TEXT)
+
+    employees = Relation('employees', DB, [first, last, pay])
+
+    # departments
+    name = Attribute('name', Attribute.TEXT)
+    budget = Attribute('budget', Attribute.INTEGER)
+    employee_nb = Attribute('employee_nb', Attribute.INTEGER)
+    chief = Attribute('chief', Attribute.TEXT)
+
+    departments = Relation('departments', DB, [name, budget, employee_nb, chief])
+
+    # contractors
+    contractors = Relation('contractors', DB, [first, last, pay])
+
+    employee_count = Attribute('employee_count', Attribute.INTEGER)
+
+    queries = [
+        Select(employees, Op(pay, Op.EQUAL, 50000)),
+        Project(employees, [pay, last]),
+        Join(employees, departments),
+        Rename(departments, employee_nb, 'employee_count'),
+        Union(employees, contractors),
+        Difference(employees, contractors)
+    ]
+    for query in queries:
+        get_result(DB, query)
+
+
 if __name__ == '__main__':
     DB = 'test.db'
-    employees = Relation('employees')
-    departments = Relation('departments')
-    contractors = Relation('contractors')
 
-    pay = Attribute('pay', 10000)
-    first = Attribute('first', 'Karen')
-    last = Attribute('last', 'Pils')
-    employee_count = Attribute('employee_count')
-    employee_nb = Attribute('employee_nb')
+    # employees
+    pay = Attribute('pay', Attribute.INTEGER)
+    first = Attribute('first', Attribute.TEXT)
+    last = Attribute('last', Attribute.TEXT)
+
+    employees = Relation('employees', DB, [first, last, pay])
+
+    # departments
+    name = Attribute('name', Attribute.TEXT)
+    budget = Attribute('budget', Attribute.INTEGER)
+    employee_nb = Attribute('employee_nb', Attribute.INTEGER)
+    chief = Attribute('chief', Attribute.TEXT)
+
+    departments = Relation('departments', DB, [name, budget, employee_nb, chief])
+
+    # contractors
+    contractors = Relation('contractors', DB, [first, last, pay])
+
+    employee_count = Attribute('employee_count', Attribute.INTEGER)
 
     s = Select(employees, Op(pay, Op.EQUAL, 50000))
     p = Project(employees, [pay, last])
@@ -63,13 +117,8 @@ if __name__ == '__main__':
     d = Difference(employees, contractors)
 
     # get_result(DB, s)
+    lazy_unit_test()
 
-    with sqlite3.connect(DB) as conn:
-        cursor = conn.cursor()
-        query1 = "PRAGMA table_info(employees);"
-        query2 = "SELECT name FROM sqlite_master WHERE type='table';"
-        cursor.execute(query1)
-        print(cursor.fetchall())
 
 
 

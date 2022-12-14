@@ -1,3 +1,6 @@
+from src.expressions.Attribute import Attribute
+
+
 class Operation:
     EQUAL = '='
     GT = '>'
@@ -12,7 +15,14 @@ class Operation:
         self._b = b
 
     def get_a(self):
-        return str(self._a)
+        return self._a
 
     def get_b(self):
-        return str(self._b)
+        return self._b
+
+    def is_b_attribute(self):
+        return isinstance(self._b, Attribute)
+
+    def is_valid(self):
+        return self._a.same_data_type(self._b)
+
