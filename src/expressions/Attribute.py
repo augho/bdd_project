@@ -21,6 +21,11 @@ class Attribute:
 
         return other.name == self.name and other.data_type == self.data_type
 
+    """
+    :param other Attribute or other object to match against this attribute data_type
+    :return True when the attribute(other) has the same data_type if other is not an Attribute,
+     check whether the python data_type matches the sqlite data_type
+    """
     def same_data_type(self, other):
         if isinstance(other, Attribute):
             return other.data_type == self.data_type

@@ -7,13 +7,27 @@ class Relation:
         self.db_name = db_name
         self.schema = schema
 
-    def get_query_result(self, cursor):
-        res = cursor.execute(f'SELECT DISTINCT * FROM {self.get_query(cursor)};')
+    """
+    :param cursor connection to the db
+    :return Results of the query of this relation
+    """
+    def get_query_result(self, cursor, save, name):
+        query = f'SELECT DISTINCT * FROM {self.get_query(cursor)};'
+        res = cursor.execute(query).fetchall()
+        if save:
+            query = f'CREATE TABLE {name} AS {query}'
+            cursor.execute(query)
 
-        return res.fetchall()
+        return res
 
+    """
+    Assert that the relation has at least one attribute
+    """
     def is_valid(self):
-        return len(self.schema) > 0
+        if len(self.schema) > 0:
+            return True
+        print(f'Relation {self.name} has no attribute')
+        return False
 
     def get_query(self, conn):
         return self.name

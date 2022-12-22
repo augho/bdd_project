@@ -23,6 +23,12 @@ class Operation:
     def is_b_attribute(self):
         return isinstance(self._b, Attribute)
 
+    """
+    :return True when a and b have the same data type
+    """
     def is_valid(self):
         return self._a.same_data_type(self._b)
+
+    def __str__(self):
+        return f'{self.get_a()} {self.operation} {self.get_b()}'
 

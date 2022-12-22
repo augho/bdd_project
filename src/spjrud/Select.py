@@ -10,15 +10,33 @@ class Select(Relation):
         self.relation = relation
         self.op = op
 
+    """
+    The query follows the pattern:
+    SELECT DISTINCT * FROM relation WHERE a [<,>,=,...] b
+    """
     def get_query(self, conn):
         query = '(SELECT DISTINCT * FROM ' + self.relation.get_query(conn)
-        query += f' WHERE {self.op.get_a()} {self.op.operation} {self.op.get_b()})'
+        query += f' WHERE {self.op})'
         return query
 
+    """
+    The query is valid if:
+    - the sub query is valid
+    - the attribute(s) is/are in the sub relation
+    - the data type in the comparison matches
+    """
     def is_valid(self):
-        # when b is an attribute check if a and b are in relation and if operation data_types match
+        if not self.relation.is_valid():
+            return False
+        if not self.relation.has_attribute(self.op.get_a()):
+            print(f'ERROR(Select): Attribute {self.op.get_a()} is not in relation')
+        # when b is an attribute check if in relation
         if self.op.is_b_attribute():
-            return self.relation.has_attribute(self.op.get_a()) and \
-                self.relation.has_attribute(self.op.get_b()) and self.op.is_valid()
-        # b is not an attribute so only needs to be checked
-        return self.relation.has_attribute(self.op.get_a()) and self.op.is_valid()
+            if not self.relation.has_attribute(self.op.get_b()):
+                print(f'ERROR(Select): Attribute {self.op.get_b()} is not in relation')
+
+        if not self.op.is_valid():
+            print(f'ERROR(Select): Datatype between attributes do not match: {self.op}')
+            return False
+
+        return True
