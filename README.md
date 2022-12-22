@@ -242,10 +242,6 @@ Pattern de traduction:
 
 ## Points à améliorer
 
-##### Mon utilisation de git:
-Comme j'ai réalisé le projet seul je n'ai pas vraiment fait de commits régulier, bonne utilisation de branche,
-push régulier, etc
-
 ##### Messages d'erreurs:
 
 Mes messages d'erreurs ne sont pas de la plus grande précision. Cependant ils m'ont tout de même été utiles lors
