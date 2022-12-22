@@ -147,6 +147,9 @@ SELECT DISTINCT attributes[0], ..., attributes[n] FROM relation
 ```
 
 #### -Classe _Join_:
+Pour le join, je commence par établir une liste des attributs communs entre les 2 relations pour savoir
+quelles colonnes je devrai préciser dans le *USING* et aussi pour établir le schéma de la relation
+qui va découler de cette requête \
 Constructeur: 
 ```python
 # rel_a et rel_b sont des objets de la classe Relation
@@ -166,6 +169,12 @@ SELECT * FROM rel_a JOIN rel_b USING (common_attribute1, common_attribute2, ...)
 ```
 
 #### -Classe _Rename_:
+Pour le rename je commence par créer une table temporelle qui est une copie de la relation.
+Ensuite je renomme la colonne concernée et je retourne comme query SELECT * de la nouvelle table construite.
+Le nom de cette table est un uuid ou j'ai rajouté une string devant pour éviter que le nom commence par un nombre.
+C'est à cause de cette manipulation que je dois passer le _cusor_ en paramètre dans toutes les méthodes
+_get_query()_ car comme la table est temporelle elle se détruit en même temps que la connexion établie
+avec la base de donnée \
 Constructeur: 
 ```python
 # relation est un objet de la classe Relation
@@ -230,3 +239,14 @@ Pattern de traduction:
 # rel_a - rel_b
 (SELECT * FROM rel_a) EXCEPT (SELECT * FROM rel_b)
 ```
+
+## Points à améliorer
+
+##### Mon utilisation de git:
+Comme j'ai réalisé le projet seul je n'ai pas vraiment fait de commits régulier, bonne utilisation de branche,
+push régulier, etc
+
+##### Messages d'erreurs:
+
+Mes messages d'erreurs ne sont pas de la plus grande précision. Cependant ils m'ont tout de même été utiles lors
+de mes tests de l'outil.
